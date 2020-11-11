@@ -78,7 +78,9 @@ typedef Filter = {
 typedef Message = {
 	text:String,
 	name:String,
-	time:String
+	time:String,
+	video_title:String,
+	video_time:Float
 }
 
 typedef VideoItem = {

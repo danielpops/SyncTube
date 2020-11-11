@@ -373,7 +373,8 @@ class Main {
 				personal = clients.getByName(personal.name, personal);
 
 			case Message:
-				addMessage(data.message.clientName, data.message.text);
+				addMessage(data.message.clientName, data.message.text, null, "the_title", 1.0);
+				//addMessage(data.message.clientName, data.message.text, null, data.message.video_title, data.message.video_time);
 
 			case ServerMessage:
 				final id = data.serverMessage.textId;
@@ -514,7 +515,7 @@ class Main {
 		clearChat();
 		serverMessage(1);
 		for (message in connected.history) {
-			addMessage(message.name, message.text, message.time);
+			addMessage(message.name, message.text, message.time, message.video_title, message.video_time);
 		}
 		player.setItems(connected.videoList, connected.itemPos);
 	}
@@ -689,7 +690,7 @@ class Main {
 		ge("#messagebuffer").textContent = "";
 	}
 
-	function addMessage(name:String, text:String, ?time:String):Void {
+	function addMessage(name:String, text:String, ?time:String, ?video_title:String, ?video_time:Float):Void {
 		final msgBuf = ge("#messagebuffer");
 		final userDiv = document.createDivElement();
 		userDiv.className = 'chat-msg-$name';
@@ -709,6 +710,10 @@ class Main {
 		final textDiv = document.createDivElement();
 		textDiv.className = "text";
 		text = text.htmlEscape();
+
+		final videoDetailsDiv = document.createDivElement();
+		videoDetailsDiv.className = "timestamp";
+		videoDetailsDiv.innerHTML = "[" + video_title + " - (" + video_time + ")]";
 
 		if (text.startsWith("/")) {
 			if (name == personal.name) handleCommands(text.substr(1));
@@ -730,9 +735,11 @@ class Main {
 		}
 
 		userDiv.appendChild(headDiv);
+		userDiv.appendChild(videoDetailsDiv);
 		headDiv.appendChild(nameDiv);
 		headDiv.appendChild(tstamp);
 		userDiv.appendChild(textDiv);
+		headDiv.appendChild(videoDetailsDiv);
 		msgBuf.appendChild(userDiv);
 		if (isInChatEnd) {
 			while (msgBuf.children.length > 200) msgBuf.removeChild(msgBuf.firstChild);

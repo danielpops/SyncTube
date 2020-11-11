@@ -432,10 +432,18 @@ class Main {
 				if (text.length > config.maxMessageLength) {
 					text = text.substr(0, config.maxMessageLength);
 				}
+				final time = Date.now().toString().split(" ")[1];
+				final current_video_title = videoList.length > 0 ? videoList[0].title : "None";
+				final current_video_time = videoTimer.getTime();
 				data.message.text = text;
 				data.message.clientName = client.name;
-				final time = Date.now().toString().split(" ")[1];
-				messages.push({text: text, name: client.name, time: time});
+				messages.push({
+					text: text,
+					name: client.name,
+					time: time,
+					video_title: current_video_title,
+					video_time: current_video_time,
+				});
 				if (messages.length > config.serverChatHistory) messages.shift();
 				broadcast(data);
 
